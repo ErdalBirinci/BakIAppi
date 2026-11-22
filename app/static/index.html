@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="tr" class="lp">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BakIAppi — futbol, basketbol ve voleybol için canlı maç analizi</title>
+<meta name="description" content="Futbol, basketbol ve voleybol aynı panelde: oyuncu ve top takibi, mesafe, hız, ısı haritası, devre/çeyrek/set, 2/3 sayı ve ace/blok, paylaşılabilir kart ve takım raporu. Kurulum yok, sadece bir yayın linki.">
+<meta name="theme-color" content="#05070c">
+<link rel="stylesheet" href="/landing.css">
+</head>
+<body class="landing">
+<a class="skip" href="#icerik">İçeriğe geç</a>
+<div class="grain" aria-hidden="true"></div>
+<i class="progress" aria-hidden="true"><b id="scrollBar"></b></i>
+
+<header class="nav" id="nav">
+  <a class="brand" href="/" aria-label="BakIAppi">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" fill="none">
+        <path d="M16 3.4 27.2 9.6v12.8L16 28.6 4.8 22.4V9.6L16 3.4Z" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M4.8 9.6 16 15.9l11.2-6.3M16 15.9v12.7" stroke="currentColor" stroke-width="1.1" opacity=".6"/>
+        <circle cx="16" cy="15.9" r="3.1" fill="currentColor"/>
+      </svg>
+    </span>
+    <span class="brand-text">BakI<em>Appi</em></span>
+  </a>
+
+  <nav class="nav-links" id="navMenu" aria-label="Bölümler">
+    <a href="#branslar">Branşlar</a>
+    <a href="#analiz">Analiz</a>
+    <a href="#nasil">Nasıl çalışır</a>
+    <a href="#paylasim">Paylaşım</a>
+    <a href="#sss">SSS</a>
+  </nav>
+
+  <div class="nav-cta">
+    <a class="btn btn-ghost" href="/studio.html">Video analizi</a>
+    <a class="btn btn-primary" href="/login.html">Panele gir</a>
+  </div>
+
+  <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false"
+          aria-controls="navMenu" aria-label="Menü">
+    <svg class="ico-open" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+    </svg>
+    <svg class="ico-close" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+    </svg>
+  </button>
+</header>
+
+<main id="icerik">
+
+  <!-- ============================================================ hero -->
+  <section class="hero">
+    <div class="aurora" aria-hidden="true"></div>
+
+    <div class="hero-copy">
+      <span class="eyebrow"><i class="pulse"></i> futbol + basketbol + voleybol · tek panel</span>
+      <h1>Üç branş.<br><span class="grad">Tek analiz motoru.</span></h1>
+      <p class="hero-sub">
+        Panele girerken branşını seçiyorsun. Futbolda 120×70 m saha, basketbolda
+        28×15 m FIBA kortu, voleybolda 18×9 m FIVB kortu devreye giriyor: oyuncu ve
+        top takibi, mesafe, hız, ısı haritası, devre/çeyrek/set, kart ve rapor —
+        hepsi seçtiğin branşa göre.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="/login.html">
+          Branşını seç, başla
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m0 0-5-5m5 5-5 5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="btn btn-glass btn-lg" href="#branslar">Üç branşı karşılaştır</a>
+      </div>
+
+      <ul class="sport-pills" aria-label="Desteklenen branşlar">
+        <li class="on">
+          <svg class="ball-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="m12 6.8 3.6 2.6-1.4 4.2H9.8L8.4 9.4 12 6.8Z"/>
+            <path d="M12 3v3.8M4.1 9.4l4.3 2.2M19.9 9.4l-4.3 2.2M6.3 19.6l3.5-6M17.7 19.6l-3.5-6"/>
+          </svg>
+          Futbol modu
+        </li>
+        <li class="on orange-pill">
+          <svg class="ball-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M3 12h18M12 3v18M5.6 5.6c3.6 2.4 9.2 2.4 12.8 0M5.6 18.4c3.6-2.4 9.2-2.4 12.8 0"/>
+          </svg>
+          Basketbol modu
+        </li>
+        <li class="on volley-pill">
+          <svg class="ball-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M4.2 7.3c4.2 2.6 11.4 2.6 15.6 0M4.2 16.7c4.2-2.6 11.4-2.6 15.6 0M9.6 4.1c2.5 4.2 2.5 11.4 0 15.8M14.4 4.1c-2.5 4.2-2.5 11.4 0 15.8"/>
+          </svg>
+          Voleybol modu
+        </li>
+      </ul>
+
+      <ul class="hero-facts">
+        <li><b>3 branş</b><span>futbol + basketbol + voleybol</span></li>
+        <li><b>18×9 m</b><span>FIVB voleybol kortu</span></li>
+        <li><b>5 set</b><span>25 sayı · 2 fark · ace/blok</span></li>
+        <li><b>1 link</b><span>kurulum yok</span></li>
+      </ul>
+    </div>
+
+    <!-- 3D sahne: aynı anda futbol sahası ve basketbol kortu -->
+    <div class="scene" id="scene" aria-hidden="true">
+      <div class="scene-inner">
+        <div class="orb orb-a"></div>
+        <div class="orb orb-b"></div>
+        <div class="scene-glow"></div>
+
+        <div class="mode-chip"><i class="dot pink"></i> Futbol <span>+</span> <i class="dot orange"></i> Basketbol <span>+</span> <i class="dot gold"></i> Voleybol <em>tek panel</em></div>
+
+        <div class="arena">
+          <!-- futbol -->
+          <div class="slab slab-football">
+            <div class="court-surface turf">
+              <div class="turf-stripes"></div>
+              <svg class="court-lines pitch" viewBox="0 0 120 80" preserveAspectRatio="none">
+                <rect x="2" y="2" width="116" height="76" rx="1"/>
+                <line x1="60" y1="2" x2="60" y2="78"/>
+                <circle cx="60" cy="40" r="9"/>
+                <circle cx="60" cy="40" r="1.3" class="solid"/>
+                <rect x="2" y="20" width="16" height="40"/>
+                <rect x="102" y="20" width="16" height="40"/>
+                <rect x="2" y="30" width="6" height="20"/>
+                <rect x="112" y="30" width="6" height="20"/>
+                <circle cx="16" cy="40" r="1" class="solid"/>
+                <circle cx="104" cy="40" r="1" class="solid"/>
+              </svg>
+              <span class="heat heat-pink h-a"></span>
+              <span class="heat heat-cyan h-b"></span>
+              <span class="heat heat-gold h-c"></span>
+              <span class="marker" style="--x:31%;--y:33%"><b>#9</b></span>
+              <span class="marker alt" style="--x:67%;--y:58%"><b>#4</b></span>
+              <span class="marker alt" style="--x:53%;--y:24%"><b>#11</b></span>
+            </div>
+          </div>
+
+          <!-- basketbol -->
+          <div class="slab slab-basket">
+            <div class="court-surface wood">
+              <div class="wood-planks"></div>
+              <svg class="court-lines hoop" viewBox="0 0 280 150" preserveAspectRatio="none">
+                <rect x="2" y="2" width="276" height="146" rx="1.5"/>
+                <line x1="140" y1="2" x2="140" y2="148"/>
+                <circle cx="140" cy="75" r="18"/>
+                <circle cx="140" cy="75" r="2" class="solid"/>
+                <rect x="2" y="50" width="58" height="50"/>
+                <rect x="220" y="50" width="58" height="50"/>
+                <circle cx="60" cy="75" r="18" class="soft"/>
+                <circle cx="220" cy="75" r="18" class="soft"/>
+                <path d="M 2 12 L 30 12 A 68 68 0 0 1 30 138 L 2 138"/>
+                <path d="M 278 12 L 250 12 A 68 68 0 0 0 250 138 L 278 138"/>
+                <path d="M 2 63 A 12 12 0 0 1 2 87"/>
+                <path d="M 278 63 A 12 12 0 0 0 278 87"/>
+                <line x1="12" y1="66" x2="12" y2="84"/>
+                <line x1="268" y1="66" x2="268" y2="84"/>
+                <circle cx="15" cy="75" r="2.6" class="solid hoop-ring"/>
+                <circle cx="265" cy="75" r="2.6" class="solid hoop-ring"/>
+              </svg>
+              <span class="heat heat-orange h-d"></span>
+              <span class="heat heat-cyan h-e"></span>
+              <span class="marker orange" style="--x:38%;--y:42%"><b>#23</b></span>
+              <span class="marker" style="--x:61%;--y:66%"><b>#7</b></span>
+              <span class="ball-dot" style="--x:72%;--y:38%"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- yüzen HUD kartları -->
+        <article class="hud hud-football">
+          <header><i class="live-dot"></i> FUTBOL <span>CANLI</span></header>
+          <div class="scoreline"><b>2</b><span>–</span><b>1</b></div>
+          <footer>2. devre · A / B</footer>
+        </article>
+
+        <article class="hud hud-basket">
+          <header><i class="live-dot orange"></i> BASKETBOL <span>ÇEYREK 3</span></header>
+          <div class="scoreline hoop"><b>58</b><span>–</span><b>54</b></div>
+          <footer>2 sayı · 3 sayı · asist</footer>
+        </article>
+
+        <article class="hud hud-volley">
+          <header><i class="live-dot gold"></i> VOLEYBOL <span>SET 3</span></header>
+          <div class="scoreline volley"><b>22</b><span>–</span><b>20</b></div>
+          <div class="volley-mini" aria-hidden="true">
+            <svg viewBox="0 0 180 90" preserveAspectRatio="none">
+              <rect x="3" y="3" width="174" height="84" rx="1"/>
+              <line x1="90" y1="3" x2="90" y2="87" class="net"/>
+              <line x1="60" y1="3" x2="60" y2="87"/>
+              <line x1="120" y1="3" x2="120" y2="87"/>
+            </svg>
+          </div>
+          <footer>18×9 m · FIVB · setler 1–0</footer>
+        </article>
+
+        <article class="hud hud-ball">
+          <span class="label">TOP TAKİBİ</span>
+          <div class="hud-value"><strong>%86</strong><span>görünürlük</span></div>
+          <div class="track"><i></i></div>
+        </article>
+
+        <article class="hud hud-calib">
+          <span class="label">4 KÖŞE KALİBRASYONU</span>
+          <div class="corner-mini">
+            <i style="--x:8%;--y:16%"></i><i style="--x:92%;--y:16%"></i>
+            <i style="--x:92%;--y:84%"></i><i style="--x:8%;--y:84%"></i>
+            <b></b>
+          </div>
+          <span class="hud-note">tam / yarım saha</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================== şerit -->
+  <section class="strip" aria-label="Sistem yetenekleri">
+    <div class="strip-inner">
+      <div><b>Futbol modu</b><span>120×70 m · 2 devre</span></div>
+      <div><b>Basketbol modu</b><span>28×15 m · 4 çeyrek</span></div>
+      <div><b>Voleybol modu</b><span>18×9 m · 5 set</span></div>
+      <div><b>Top takibi</b><span>oyuncu + top, üç branşta</span></div>
+      <div><b>Isı haritası</b><span>saha ve kort geometrisiyle</span></div>
+      <div><b>Kart &amp; rapor</b><span>1080×1350 paylaşım çıktısı</span></div>
+    </div>
+  </section>
+
+  <!-- ========================================================= branşlar -->
+  <section class="section" id="branslar">
+    <div class="section-head reveal">
+      <span class="kicker">üç branş, tek sistem</span>
+      <h2>Maça göre değişen tek şey<br><span class="grad">geometri.</span></h2>
+      <p>Panelde branşını seçtiğin an saha ölçüsü, hız eşikleri, periyotlar, olay türleri
+        ve rapor dili değişir. Futbol, basketbol ve voleybol aynı motoru kullanır; ölçümler
+        seçtiğin branşın geometrisine göre yapılır.</p>
+    </div>
+
+    <div class="sport-grid">
+      <article class="sport-card football reveal">
+        <header>
+          <span class="sport-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="m12 6.8 3.6 2.6-1.4 4.2H9.8L8.4 9.4 12 6.8Z"/>
+              <path d="M12 3v3.8M4.1 9.4l4.3 2.2M19.9 9.4l-4.3 2.2M6.3 19.6l3.5-6M17.7 19.6l-3.5-6"/>
+            </svg>
+          </span>
+          <div><b>Futbol</b><span>halısaha &amp; saha</span></div>
+          <em>AUTO</em>
+        </header>
+
+        <div class="sport-visual pitch-visual">
+          <svg viewBox="0 0 120 80" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="2" y="2" width="116" height="76" rx="1"/>
+            <line x1="60" y1="2" x2="60" y2="78"/>
+            <circle cx="60" cy="40" r="9"/>
+            <rect x="2" y="20" width="16" height="40"/>
+            <rect x="102" y="20" width="16" height="40"/>
+          </svg>
+          <span class="map-heat pink" style="--x:28%;--y:38%"></span>
+          <span class="map-heat cyan" style="--x:64%;--y:62%"></span>
+          <span class="map-marker" style="--x:28%;--y:38%">#9</span>
+          <span class="map-marker alt" style="--x:64%;--y:62%">#4</span>
+        </div>
+
+        <dl class="specs">
+          <div><dt>Saha</dt><dd>120 × 70 m</dd></div>
+          <div><dt>Periyot</dt><dd>2 devre</dd></div>
+          <div><dt>Hız bölgeleri</dt><dd>7 / 14 / 20 km/s</dd></div>
+          <div><dt>Olaylar</dt><dd>Gol · asist</dd></div>
+        </dl>
+
+        <ul class="ticks">
+          <li>Otomatik saha anahtar noktaları</li>
+          <li>Kaleci ve hakem ayrımı</li>
+          <li>Devre takibi, gol/asist skoru</li>
+          <li>Takım ve oyuncu ısı haritası</li>
+        </ul>
+      </article>
+
+      <article class="sport-card basketball reveal">
+        <header>
+          <span class="sport-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M3 12h18M12 3v18M5.6 5.6c3.6 2.4 9.2 2.4 12.8 0M5.6 18.4c3.6-2.4 9.2-2.4 12.8 0"/>
+            </svg>
+          </span>
+          <div><b>Basketbol</b><span>FIBA kortu</span></div>
+          <em class="orange">4 KÖŞE</em>
+        </header>
+
+        <div class="sport-visual hoop-visual">
+          <svg viewBox="0 0 280 150" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="2" y="2" width="276" height="146" rx="1.5"/>
+            <line x1="140" y1="2" x2="140" y2="148"/>
+            <circle cx="140" cy="75" r="18"/>
+            <rect x="2" y="50" width="58" height="50"/>
+            <rect x="220" y="50" width="58" height="50"/>
+            <circle cx="60" cy="75" r="18"/>
+            <circle cx="220" cy="75" r="18"/>
+            <path d="M 2 12 L 30 12 A 68 68 0 0 1 30 138 L 2 138"/>
+            <path d="M 278 12 L 250 12 A 68 68 0 0 0 250 138 L 278 138"/>
+            <circle cx="15" cy="75" r="2.8" class="solid"/>
+            <circle cx="265" cy="75" r="2.8" class="solid"/>
+          </svg>
+          <span class="map-heat orange" style="--x:26%;--y:44%"></span>
+          <span class="map-heat cyan" style="--x:72%;--y:34%"></span>
+          <span class="map-marker orange" style="--x:26%;--y:44%">#23</span>
+          <span class="map-marker" style="--x:72%;--y:34%">#7</span>
+          <span class="map-ball" style="--x:76%;--y:56%"></span>
+        </div>
+
+        <dl class="specs">
+          <div><dt>Kort</dt><dd>28 × 15 m (FIBA)</dd></div>
+          <div><dt>Periyot</dt><dd>4 çeyrek</dd></div>
+          <div><dt>Hız bölgeleri</dt><dd>6 / 11 / 17 km/s</dd></div>
+          <div><dt>Olaylar</dt><dd>Basket 2/3 · asist</dd></div>
+        </dl>
+
+        <ul class="ticks">
+          <li>Dört köşe kalibrasyonu: tam / yarım saha</li>
+          <li>Top takibi ve top ısı haritası</li>
+          <li>2 ve 3 sayılık basket, asist, çeyrek</li>
+          <li>FIBA çizgileriyle kort ve rapor</li>
+        </ul>
+      </article>
+
+      <article class="sport-card volleyball reveal">
+        <header>
+          <span class="sport-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M4.2 7.3c4.2 2.6 11.4 2.6 15.6 0M4.2 16.7c4.2-2.6 11.4-2.6 15.6 0M9.6 4.1c2.5 4.2 2.5 11.4 0 15.8M14.4 4.1c-2.5 4.2-2.5 11.4 0 15.8"/>
+            </svg>
+          </span>
+          <div><b>Voleybol</b><span>FIVB kortu</span></div>
+          <em class="gold">5 SET</em>
+        </header>
+
+        <div class="sport-visual volley-visual">
+          <svg viewBox="0 0 180 90" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="3" y="3" width="174" height="84" rx="1"/>
+            <line x1="90" y1="3" x2="90" y2="87" class="net"/>
+            <line x1="60" y1="3" x2="60" y2="87"/>
+            <line x1="120" y1="3" x2="120" y2="87"/>
+            <circle cx="90" cy="4" r="1.8" class="solid"/>
+            <circle cx="90" cy="86" r="1.8" class="solid"/>
+          </svg>
+          <span class="map-heat gold" style="--x:30%;--y:36%"></span>
+          <span class="map-heat gold small" style="--x:38%;--y:62%"></span>
+          <span class="map-heat cyan" style="--x:69%;--y:48%"></span>
+          <span class="map-marker gold" style="--x:30%;--y:36%">#7</span>
+          <span class="map-marker" style="--x:69%;--y:48%">#11</span>
+          <span class="map-ball" style="--x:75%;--y:31%"></span>
+        </div>
+
+        <dl class="specs">
+          <div><dt>Kort</dt><dd>18 × 9 m (FIVB)</dd></div>
+          <div><dt>Periyot</dt><dd>5 set</dd></div>
+          <div><dt>Hız bölgeleri</dt><dd>4 / 8 / 13 km/s</dd></div>
+          <div><dt>Olaylar</dt><dd>Ace · hücum · blok · hata</dd></div>
+        </dl>
+
+        <ul class="ticks">
+          <li>Dört köşe kalibrasyonu: tam / yarım kort</li>
+          <li>Servis, top ve oyuncu takibi</li>
+          <li>25 sayı (5. set 15) · 2 fark kuralı</li>
+          <li>Set skoru, ace/blok/hata ve rapor</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="compare reveal">
+      <div class="compare-head">
+        <span class="kicker">tek bakışta</span>
+        <h3>Sistem neyi branşa göre değiştiriyor?</h3>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Ayarlar</th><th><span class="th-dot pink"></span> Futbol</th><th><span class="th-dot orange"></span> Basketbol</th><th><span class="th-dot gold"></span> Voleybol</th></tr></thead>
+          <tbody>
+            <tr><td>Saha / kort</td><td>120 × 70 m</td><td>28 × 15 m FIBA</td><td class="v">18 × 9 m FIVB</td></tr>
+            <tr><td>Periyot</td><td>2 devre</td><td>4 çeyrek</td><td class="v">5 set</td></tr>
+            <tr><td>Hız eşikleri</td><td>7 / 14 / 20 km/s</td><td>6 / 11 / 17 km/s</td><td class="v">4 / 8 / 13 km/s</td></tr>
+            <tr><td>Olaylar</td><td>Gol, asist</td><td>Basket 2, basket 3, asist</td><td class="v">Ace, hücum, blok, hata</td></tr>
+            <tr><td>Kalibrasyon</td><td>Otomatik anahtar nokta</td><td>4 köşe · tam / yarım saha</td><td class="v">4 köşe · tam / yarım kort</td></tr>
+            <tr><td>Isı haritası</td><td>120×70 m ızgara</td><td>28×15 m · 0,5 m hücre</td><td class="v">18×9 m · 0,25 m hücre</td></tr>
+            <tr><td>Top</td><td>Top takibi ve görünürlük</td><td>Top takibi + top ısı haritası</td><td class="v">Top takibi + top ısı haritası</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================== analiz -->
+  <section class="section" id="analiz">
+    <div class="section-head reveal">
+      <span class="kicker">aynı motor, üç geometri</span>
+      <h2>Saha da kort da<br><span class="grad">aynı netlikte.</span></h2>
+      <p>Konumlar gerçek metreye çevrilir; kamera kayması ve kutu titremesi düzeltilir.
+        Futbolda otomatik saha tespiti, basketbol ve voleybolda işaretlediğin dört köşe
+        homografiyi kurar.</p>
+    </div>
+
+    <div class="analysis-grid">
+      <article class="map-card football reveal">
+        <header><span class="tag-dot pink"></span> Futbol · 120×70 m <em>canlı</em></header>
+        <div class="map-stage pitch-stage">
+          <svg viewBox="0 0 120 80" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="2" y="2" width="116" height="76" rx="1"/>
+            <line x1="60" y1="2" x2="60" y2="78"/>
+            <circle cx="60" cy="40" r="9"/>
+            <rect x="2" y="20" width="16" height="40"/>
+            <rect x="102" y="20" width="16" height="40"/>
+          </svg>
+          <span class="map-heat pink" style="--x:30%;--y:36%"></span>
+          <span class="map-heat pink small" style="--x:42%;--y:55%"></span>
+          <span class="map-heat cyan" style="--x:68%;--y:58%"></span>
+          <span class="map-marker" style="--x:30%;--y:36%">#9</span>
+          <span class="map-marker alt" style="--x:68%;--y:58%">#4</span>
+        </div>
+        <div class="map-stats">
+          <div><b>8.6</b><span>km mesafe</span></div>
+          <div><b>18.4</b><span>km/s tepe</span></div>
+          <div><b>12</b><span>sprint</span></div>
+          <div><b>2</b><span>devre</span></div>
+        </div>
+      </article>
+
+      <article class="map-card basketball reveal">
+        <header><span class="tag-dot orange"></span> Basketbol · 28×15 m <em>FIBA</em></header>
+        <div class="map-stage hoop-stage">
+          <svg viewBox="0 0 280 150" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="2" y="2" width="276" height="146" rx="1.5"/>
+            <line x1="140" y1="2" x2="140" y2="148"/>
+            <circle cx="140" cy="75" r="18"/>
+            <rect x="2" y="50" width="58" height="50"/>
+            <rect x="220" y="50" width="58" height="50"/>
+            <circle cx="60" cy="75" r="18"/>
+            <circle cx="220" cy="75" r="18"/>
+            <path d="M 2 12 L 30 12 A 68 68 0 0 1 30 138 L 2 138"/>
+            <path d="M 278 12 L 250 12 A 68 68 0 0 0 250 138 L 278 138"/>
+            <circle cx="15" cy="75" r="3" class="solid"/>
+            <circle cx="265" cy="75" r="3" class="solid"/>
+          </svg>
+          <span class="map-heat orange" style="--x:24%;--y:42%"></span>
+          <span class="map-heat orange small" style="--x:34%;--y:62%"></span>
+          <span class="map-heat cyan" style="--x:70%;--y:34%"></span>
+          <span class="map-marker orange" style="--x:24%;--y:42%">#23</span>
+          <span class="map-marker" style="--x:70%;--y:34%">#7</span>
+          <span class="map-ball" style="--x:74%;--y:58%"></span>
+        </div>
+        <div class="map-stats">
+          <div><b>3.2</b><span>km mesafe</span></div>
+          <div><b>16.2</b><span>km/s tepe</span></div>
+          <div><b>4</b><span>çeyrek</span></div>
+          <div><b>%86</b><span>top takibi</span></div>
+        </div>
+      </article>
+
+      <article class="map-card volleyball reveal">
+        <header><span class="tag-dot gold"></span> Voleybol · 18×9 m <em>FIVB</em></header>
+        <div class="map-stage volley-stage">
+          <svg viewBox="0 0 180 90" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="3" y="3" width="174" height="84" rx="1"/>
+            <line x1="90" y1="3" x2="90" y2="87" class="net"/>
+            <line x1="60" y1="3" x2="60" y2="87"/>
+            <line x1="120" y1="3" x2="120" y2="87"/>
+            <circle cx="90" cy="4" r="1.8" class="solid"/>
+            <circle cx="90" cy="86" r="1.8" class="solid"/>
+          </svg>
+          <span class="map-heat gold" style="--x:29%;--y:34%"></span>
+          <span class="map-heat gold small" style="--x:39%;--y:61%"></span>
+          <span class="map-heat cyan" style="--x:70%;--y:46%"></span>
+          <span class="map-marker gold" style="--x:29%;--y:34%">#7</span>
+          <span class="map-marker" style="--x:70%;--y:46%">#11</span>
+          <span class="map-ball" style="--x:76%;--y:30%"></span>
+        </div>
+        <div class="map-stats">
+          <div><b>2.8</b><span>km mesafe</span></div>
+          <div><b>21.4</b><span>km/s tepe</span></div>
+          <div><b>5</b><span>set</span></div>
+          <div><b>%88</b><span>top takibi</span></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature reveal">
+        <span class="ficon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="15.5" r="2.4"/><path d="M10.5 9.5 14 13M3 20c.6-3 2.6-4.6 5-4.6s4.4 1.6 5 4.6"/></svg>
+        </span>
+        <h3>Top &amp; oyuncu takibi</h3>
+        <p>Üç branşta da oyuncular numaralarıyla izlenir; top ayrıca takip edilir ve görünürlük oranı raporlanır.</p>
+      </article>
+      <article class="feature reveal">
+        <span class="ficon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 18V9m5 9V5m5 13v-6m5 6V8"/></svg>
+        </span>
+        <h3>Mesafe, hız, sprint</h3>
+        <p>Gerçek metre ve km/s değerleri; yürüme/jog/koşu/sprint dağılımı branşın eşikleriyle hesaplanır.</p>
+      </article>
+      <article class="feature reveal">
+        <span class="ficon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 12h18M12 5v14"/></svg>
+        </span>
+        <h3>Branşa göre ısı haritası</h3>
+        <p>Futbolda 120×70 m saha, basketbolda 28×15 m FIBA, voleybolda 18×9 m FIVB kortu; takım, oyuncu ve top kapsamında.</p>
+      </article>
+      <article class="feature reveal">
+        <span class="ficon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V8l8-4 8 4v12l-8 4-8-4Z"/><path d="M12 4v16M4 8l8 4 8-4"/></svg>
+        </span>
+        <h3>İki kalibrasyon yolu</h3>
+        <p>Futbolda otomatik anahtar noktalar; basketbol ve voleybolda maçtan alınan kare üzerinde dört köşe. Tam ya da yarım saha/kort.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================================================ nasıl -->
+  <section class="section how" id="nasil">
+    <div class="section-head reveal">
+      <span class="kicker">üç adım</span>
+      <h2>Önce branş,<br><span class="grad">sonra maç.</span></h2>
+      <p>Panel seçtiğin branşa göre açılır; yayın linkini yapıştırıp maç sonunda kartı paylaşman yeterli.</p>
+    </div>
+
+    <ol class="steps">
+      <li class="step reveal">
+        <div class="step-visual branch-visual">
+          <span class="branch-pill on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="m12 6.8 3.6 2.6-1.4 4.2H9.8L8.4 9.4 12 6.8Z"/></svg> Futbol</span>
+          <span class="branch-pill on orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18M5.6 5.6c3.6 2.4 9.2 2.4 12.8 0M5.6 18.4c3.6-2.4 9.2-2.4 12.8 0"/></svg> Basketbol</span>
+          <span class="branch-pill on gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M4.2 7.3c4.2 2.6 11.4 2.6 15.6 0M4.2 16.7c4.2-2.6 11.4-2.6 15.6 0M9.6 4.1c2.5 4.2 2.5 11.4 0 15.8M14.4 4.1c-2.5 4.2-2.5 11.4 0 15.8"/></svg> Voleybol</span>
+          <span class="branch-hint">panel girişinde seçim</span>
+        </div>
+        <span class="num">01</span>
+        <h3>Branşını seç</h3>
+        <p>Futbol, basketbol ya da voleybol. Saha ölçüsü, periyotlar, olaylar ve raporlar anında bu seçime göre kurulur.</p>
+      </li>
+
+      <li class="step reveal">
+        <div class="step-visual calib-visual">
+          <svg viewBox="0 0 280 150" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="2" y="2" width="276" height="146" rx="2"/>
+            <line x1="140" y1="2" x2="140" y2="148"/>
+            <circle cx="140" cy="75" r="18"/>
+            <rect x="2" y="50" width="58" height="50"/>
+            <rect x="220" y="50" width="58" height="50"/>
+            <circle cx="60" cy="75" r="18"/>
+            <circle cx="220" cy="75" r="18"/>
+            <path d="M 2 12 L 30 12 A 68 68 0 0 1 30 138 L 2 138"/>
+            <path d="M 278 12 L 250 12 A 68 68 0 0 0 250 138 L 278 138"/>
+          </svg>
+          <i class="corner p1">1</i><i class="corner p2">2</i><i class="corner p3">3</i><i class="corner p4">4</i>
+          <span class="calib-line"></span>
+        </div>
+        <span class="num">02</span>
+        <h3>Yayını bağla</h3>
+        <p>Canlı linki yapıştır ya da videoyu yükle. Basketbol ve voleybolda dört kort köşesini işaretle; yarım saha/kort da seçilebilir.</p>
+      </li>
+
+      <li class="step reveal">
+        <div class="step-visual card-visual">
+          <div class="mini-card football"><span>#9</span><b>8.6 km</b><em>18.4 km/s</em></div>
+          <div class="mini-card basketball"><span>#23</span><b>3.2 km</b><em>16.2 km/s</em></div>
+          <div class="mini-card volleyball"><span>#7</span><b>2.8 km</b><em>21.4 km/s</em></div>
+        </div>
+        <span class="num">03</span>
+        <h3>Maç sonunda paylaş</h3>
+        <p>Oyuncu kartı, takım raporu ve CSV hazır. Futbolda gol/asist, basketbolda 2/3 sayı, voleybolda ace/blok/hata set skoruna yansır.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ========================================================== paylaşım -->
+  <section class="section share" id="paylasim">
+    <div class="share-copy reveal">
+      <span class="kicker">maç sonrası</span>
+      <h2>Üç branşın<br><span class="grad">kendi kartı.</span></h2>
+      <p>Kart ve rapor, branşın geometrisini ve olaylarını taşıyor: futbolda gol/asist ve devre,
+        basketbolda 2/3 sayı, asist ve çeyrek, voleybolda ace/blok/hata ve set skoru. Hepsi
+        <b>1080×1350</b> olarak çizilir.</p>
+      <ul class="ticks">
+        <li><b>Futbol kartı:</b> mesafe, tepe hız, sprint, saha ısı haritası</li>
+        <li><b>Basketbol kartı:</b> 2/3 sayı, asist, top görünürlüğü, FIBA kortu</li>
+        <li><b>Voleybol kartı:</b> ace/blok, set skoru, top görünürlüğü, FIVB kortu</li>
+        <li>Takım raporu ve Excel’e uygun CSV</li>
+      </ul>
+      <div class="share-actions">
+        <a class="btn btn-primary btn-lg" href="/login.html">Kendi maçını dene</a>
+        <a class="btn btn-glass btn-lg" href="/studio.html">Video ile dene</a>
+      </div>
+    </div>
+
+    <div class="cards-stage reveal" aria-hidden="true">
+      <article class="pcard football-card">
+        <header><span class="pcard-brand">BakI<em>Appi</em></span><span class="pcard-branch"><i class="dot pink"></i> FUTBOL</span></header>
+        <div class="pcard-id"><span class="shirt">#9</span><div><b>Emre Yıldız</b><small>A Takımı · 2. devre</small></div></div>
+        <div class="pcard-map pitch">
+          <svg viewBox="0 0 120 80" preserveAspectRatio="none"><rect x="2" y="2" width="116" height="76" rx="1"/><line x1="60" y1="2" x2="60" y2="78"/><circle cx="60" cy="40" r="9"/><rect x="2" y="20" width="16" height="40"/><rect x="102" y="20" width="16" height="40"/></svg>
+          <span class="map-heat pink" style="--x:34%;--y:44%"></span>
+          <span class="map-heat cyan" style="--x:68%;--y:58%"></span>
+        </div>
+        <div class="pcard-nums"><div><b>8.6</b><span>km</span></div><div><b>18.4</b><span>km/s tepe</span></div><div><b>12</b><span>sprint</span></div></div>
+      </article>
+
+      <article class="pcard basketball-card">
+        <header><span class="pcard-brand">BakI<em>Appi</em></span><span class="pcard-branch"><i class="dot orange"></i> BASKETBOL</span></header>
+        <div class="pcard-id"><span class="shirt orange">#23</span><div><b>Deniz Aksoy</b><small>B Takımı · Çeyrek 3</small></div></div>
+        <div class="pcard-map hoop">
+          <svg viewBox="0 0 280 150" preserveAspectRatio="none"><rect x="2" y="2" width="276" height="146" rx="1.5"/><line x1="140" y1="2" x2="140" y2="148"/><circle cx="140" cy="75" r="18"/><rect x="2" y="50" width="58" height="50"/><rect x="220" y="50" width="58" height="50"/><circle cx="60" cy="75" r="18"/><circle cx="220" cy="75" r="18"/><path d="M 2 12 L 30 12 A 68 68 0 0 1 30 138 L 2 138"/><path d="M 278 12 L 250 12 A 68 68 0 0 0 250 138 L 278 138"/></svg>
+          <span class="map-heat orange" style="--x:26%;--y:44%"></span>
+          <span class="map-heat cyan" style="--x:70%;--y:32%"></span>
+          <span class="map-ball" style="--x:74%;--y:58%"></span>
+        </div>
+        <div class="pcard-nums"><div><b>3.2</b><span>km</span></div><div><b>16.2</b><span>km/s tepe</span></div><div><b>2/3</b><span>sayı</span></div></div>
+      </article>
+
+      <article class="pcard volleyball-card">
+        <header><span class="pcard-brand">BakI<em>Appi</em></span><span class="pcard-branch"><i class="dot gold"></i> VOLEYBOL</span></header>
+        <div class="pcard-id"><span class="shirt gold">#7</span><div><b>Ece Arslan</b><small>A Takımı · Set 3</small></div></div>
+        <div class="pcard-map volley">
+          <svg viewBox="0 0 180 90" preserveAspectRatio="none"><rect x="3" y="3" width="174" height="84" rx="1"/><line x1="90" y1="3" x2="90" y2="87" class="net"/><line x1="60" y1="3" x2="60" y2="87"/><line x1="120" y1="3" x2="120" y2="87"/><circle cx="90" cy="4" r="1.8" class="solid"/><circle cx="90" cy="86" r="1.8" class="solid"/></svg>
+          <span class="map-heat gold" style="--x:28%;--y:36%"></span>
+          <span class="map-heat cyan" style="--x:70%;--y:52%"></span>
+          <span class="map-ball" style="--x:76%;--y:30%"></span>
+        </div>
+        <div class="pcard-nums"><div><b>2.8</b><span>km</span></div><div><b>21.4</b><span>km/s tepe</span></div><div><b>22–20</b><span>set 3</span></div></div>
+      </article>
+
+      <aside class="report-chip">
+        <span class="label">TAKIM RAPORU</span>
+        <div class="report-row"><span>Futbol</span><b>A 2 – 1 B</b></div>
+        <div class="report-row orange"><span>Basketbol</span><b>58 – 54</b></div>
+        <div class="report-row gold"><span>Voleybol</span><b>Setler 2 – 1</b></div>
+        <small>1080 × 1350 · üç branş</small>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============================================================= SSS -->
+  <section class="section faq" id="sss">
+    <div class="section-head reveal">
+      <span class="kicker">sık sorulan</span>
+      <h2>Kısa cevaplar.</h2>
+    </div>
+    <div class="faq-list">
+      <details class="reveal" open>
+        <summary>Voleybol da futbol ve basketbol kadar destekleniyor mu?</summary>
+        <p>Evet. Voleybol; 18×9 m FIVB kortu, beş set, 4/8/13 km/s hız bölgeleri,
+          ace/hücum/blok/hata olayları, 25 sayı (5. set 15) ve 2 fark kuralı, top takibi,
+          top ısı haritası, kart ve raporla aynı sistemin içinde. Panelde branşını
+          seçtiğinde tüm ekranlar voleybola dönüşür.</p>
+      </details>
+      <details class="reveal">
+        <summary>Kamera nereye konmalı?</summary>
+        <p>Futbolda orta saha hizasından sahayı tam görecek sabit bir tripod yeterli.
+          Basketbolda çizgiler ve potalar, voleybolda file, hücum çizgileri ve kort sınırları
+          görünmeli. Tam saha/kort için dört köşeyi, yarım çekimde yarım kort köşelerini
+          işaretle. Kamera hareketi düzeltilir.</p>
+      </details>
+      <details class="reveal">
+        <summary>Basketbol ve voleybolda ölçüm nasıl kalibre ediliyor?</summary>
+        <p>Maçtan alınan bir kare üzerinde dört kort köşesini sırayla işaretlersin:
+          sol üst, sağ üst, sağ alt, sol alt. Bu noktalar homografiyi kurar; mesafe ve hız
+          metre cinsinden hesaplanır. Tam ya da yarım saha/kort seçilebilir, kalibrasyon
+          canlı maçta bile güncellenebilir.</p>
+      </details>
+      <details class="reveal">
+        <summary>Top da takip ediliyor mu?</summary>
+        <p>Evet, üç branşta da. Top ayrı bir izleyiciyle takip edilir, kare üzerinde işaretlenir
+          ve görünürlük oranı raporlanır. Basketbol ve voleybol ısı haritasında “Top” kapsamı
+          ayrıca seçilebilir.</p>
+      </details>
+      <details class="reveal">
+        <summary>Yayın şart mı, video yeterli mi?</summary>
+        <p>İkisi de olur. Canlı yayında tablo maç sırasında güncellenir; maç bittikten sonra
+          yüklediğin videoda analiz tek seferde üretilir. Stüdyoda branş seçimi, basketbol ve
+          voleybol kalibrasyonu aynı şekilde çalışır.</p>
+      </details>
+      <details class="reveal">
+        <summary>Voleybolda set skoru nasıl hesaplanıyor?</summary>
+        <p>Ace, hücum ve blok olayları sayıyı kaydeden takıma; hata olayı otomatik olarak
+          rakibe yazılır. Setler 25 sayıda (beşinci set 15) ve en az 2 farkla kapanır;
+          üç set kazanan maçı alır. Skor olay sırasına göre hesaplanır, süreye göre değil.</p>
+      </details>
+      <details class="reveal">
+        <summary>Sonuçlar ne kadar isabetli?</summary>
+        <p>Futbolda anahtar nokta homografisi, basketbol ve voleybolda dört köşeden kurulan
+          homografi kullanılır; kamera kayması ve tespit gürültüsü düşülür. Zayıf ışık,
+          bulanık yayın veya yanlış köşe seçimi tepe hızı saptırabilir.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============================================================= CTA -->
+  <section class="cta">
+    <span class="kicker">sıradaki maç</span>
+    <h2>Futbol, basketbol ve voleybol<br><span class="grad">aynı panelde.</span></h2>
+    <p>Bir link, bir maç; hangi branş olursa olsun tartışmasız bir tablo.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary btn-lg" href="/login.html">Panele gir</a>
+      <a class="btn btn-glass btn-lg" href="/studio.html">Video ile dene</a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span class="brand-text">BakI<em>Appi</em></span>
+  <span>futbol, basketbol &amp; voleybol için canlı analiz</span>
+  <a href="/login.html">Giriş</a>
+  <a href="/studio.html">Video analizi</a>
+</footer>
+
+<script src="/landing.js"></script>
+</body>
+</html>

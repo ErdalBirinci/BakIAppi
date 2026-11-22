@@ -1,0 +1,30 @@
+# BakIAppi — çalışan .venv'den dondurulmuş doğrudan bağımlılıklar
+# Kurulum: uv pip install -r requirements.txt   (venv: .venv)
+#
+# Yerel `sports` paketi (saha çizimi, takım sınıflandırıcı) bu depodaki setup.py'den gelir:
+-e .
+
+# Sunucu
+fastapi==0.165.0
+uvicorn==0.54.0
+python-multipart==0.0.34
+pydantic==2.14.4
+
+# Görüntü ve tespit
+numpy==1.26.4
+opencv-python==4.10.0.84
+supervision==0.21.0
+ultralytics==8.4.216
+torch==2.15.0
+torchvision==0.29.2
+
+# Takım sınıflandırıcı (SigLIP gömme + kümeleme)
+transformers==5.23.0
+scikit-learn==1.9.1
+umap-learn==0.5.12
+
+# Canlı yayın akışı (YouTube/HLS adresi çözümleme)
+yt-dlp==2026.10.26
+
+# Not: H.264 video dönüşümü için sistemde `ffmpeg` çalıştırılabilir olmalı (pip paketi değil).
+# Not: tarayıcıda canlı yayın izlemek için internet erişimi ve geçerli bir yayın linki gerekir.

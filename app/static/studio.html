@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BakIAppi — video analizi</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>BakI<span>Appi</span></h1>
+    <span class="tag">video analizi · futbol, basketbol &amp; voleybol</span>
+    <a class="ghost" href="/app.html" style="margin-left:auto">panele dön</a>
+  </header>
+  <p class="lead">
+    Bir maç videosu seç. Sistem oyuncuları tespit edip takımlara ayırır,
+    saha/kort üzerine projekte ederek radar görünümü üretir; mesafe, hız ve top
+    istatistiklerini çıkarır. Basketbol ve voleybolda ölçüm için dört kort köşesini işaretle; voleybolda ace, blok, hücum ve hata olayları set skoruna işlenir.
+  </p>
+
+  <section class="panel">
+    <h2>1 · Video ve branş</h2>
+    <div class="row" id="sportRow">
+      <span class="muted">Branş</span>
+      <button class="chip on" type="button" data-sport="football">Futbol</button>
+      <button class="chip" type="button" data-sport="basketball">Basketbol</button>
+      <button class="chip" type="button" data-sport="volleyball">Voleybol</button>
+    </div>
+    <div class="samples" id="samples"><span class="muted">yükleniyor…</span></div>
+    <div class="row">
+      <label class="file">
+        <input type="file" id="file" accept="video/*">
+        <span id="fileLabel">veya dosya seç</span>
+      </label>
+      <select id="maxSeconds" title="İşlenecek süre">
+        <option value="5">ilk 5 sn</option>
+        <option value="10" selected>ilk 10 sn</option>
+        <option value="20">ilk 20 sn</option>
+        <option value="0">tüm video</option>
+      </select>
+      <button id="run" disabled>Analiz et</button>
+    </div>
+    <p class="hint">CPU üzerinde çalışır: kare başına yaklaşık 1–2 saniye. Uzun videolar uzun sürer.</p>
+  </section>
+
+  <section class="panel" id="calibPanel" hidden>
+    <h2>1b · Saha / kort kalibrasyonu</h2>
+    <p class="hint">Kort köşelerini sırayla işaretle: sol üst, sağ üst, sağ alt, sol alt.
+      Dört nokta tamamlanmadan basketbol veya voleybol analizi başlatılamaz.</p>
+    <div class="row">
+      <select id="calibExtent" aria-label="Görünen alan">
+        <option value="full">Tam saha</option>
+        <option value="half">Yarım saha</option>
+      </select>
+      <button class="ghost" type="button" id="calibReset">Köşeleri sıfırla</button>
+      <span class="muted" id="calibHint"></span>
+    </div>
+    <div class="calibstage"><canvas id="calibCanvas" width="1280" height="720"></canvas></div>
+    <video id="calibVideo" muted playsinline preload="metadata" style="display:none"></video>
+  </section>
+
+  <section class="panel" id="progressPanel" hidden>
+    <h2>2 · Analiz</h2>
+    <div class="bar"><i id="barFill"></i></div>
+    <div class="row meta">
+      <span id="stage">sırada</span>
+      <span id="frames"></span>
+      <span id="eta"></span>
+    </div>
+  </section>
+
+  <section class="panel" id="resultPanel" hidden>
+    <h2>3 · Sonuç</h2>
+    <video id="out" controls playsinline preload="metadata"></video>
+    <div class="cards" id="cards"></div>
+    <p class="hint" id="resultNote">Mesafe ve hız, saha homografisinden hesaplanır. Tüm oyuncuları
+      birlikte kaydıran sistematik bileşen her karede ölçülüp hareketten çıkarılır; kalan tespit
+      gürültüsü de karesel olarak düşülür. Yine de değerler yaklaşıktır.</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Oyuncu</th><th>Takım</th><th>Mesafe</th><th>En yüksek hız</th><th>Ortalama hız</th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="err" id="err" hidden></p>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>

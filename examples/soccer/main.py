@@ -20,6 +20,9 @@ PLAYER_DETECTION_MODEL_PATH = os.path.join(PARENT_DIR, 'data/football-player-det
 PITCH_DETECTION_MODEL_PATH = os.path.join(PARENT_DIR, 'data/football-pitch-detection.pt')
 BALL_DETECTION_MODEL_PATH = os.path.join(PARENT_DIR, 'data/football-ball-detection.pt')
 
+# Set BAKIAPPI_HEADLESS=1 to run without the interactive OpenCV preview window.
+HEADLESS = os.environ.get("BAKIAPPI_HEADLESS", "") == "1"
+
 BALL_CLASS_ID = 0
 GOALKEEPER_CLASS_ID = 1
 PLAYER_CLASS_ID = 2
@@ -413,10 +416,12 @@ def main(source_video_path: str, target_video_path: str, device: str, mode: Mode
         for frame in frame_generator:
             sink.write_frame(frame)
 
-            cv2.imshow("frame", frame)
-            if cv2.waitKey(1) & 0xFF == ord("q"):
-                break
-        cv2.destroyAllWindows()
+            if not HEADLESS:
+                cv2.imshow("frame", frame)
+                if cv2.waitKey(1) & 0xFF == ord("q"):
+                    break
+        if not HEADLESS:
+            cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':

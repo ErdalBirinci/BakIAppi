@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BakIAppi — giriş</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap narrow">
+
+  <header>
+    <h1>BakI<span>Appi</span></h1>
+    <span class="tag" data-i18n="app.tag">halısaha canlı analiz</span>
+    <select class="lang" data-lang-select aria-label="Dil"></select>
+  </header>
+  <p class="lead" data-i18n="index.lead">
+    Grubunu bir kez kaydet; kullanıcı adı ve şifreyi takım arkadaşlarınla paylaştığında
+    herkes aynı maçları ve analizleri görür.
+  </p>
+
+  <section class="panel">
+    <div class="tabs">
+      <button class="tab on" data-tab="login" data-i18n="index.tab.login">Giriş</button>
+      <button class="tab" data-tab="register" data-i18n="index.tab.register">Kayıt ol</button>
+    </div>
+
+    <form id="loginForm" class="form">
+      <label><span data-i18n="index.username">Kullanıcı adı</span>
+        <input id="loginUser" autocomplete="username" required>
+      </label>
+      <label><span data-i18n="index.password">Şifre</span>
+        <input id="loginPass" type="password" autocomplete="current-password" required>
+      </label>
+      <button type="submit" class="primary" data-i18n="index.loginBtn">Giriş yap</button>
+    </form>
+
+    <form id="registerForm" class="form" hidden>
+      <label><span data-i18n="index.group">Halısaha grubu adı</span>
+        <input id="regGroup" data-i18n-placeholder="index.groupPlaceholder" placeholder="ör. Halısaha FC" required>
+      </label>
+      <label><span data-i18n="index.username">Kullanıcı adı</span>
+        <input id="regUser" autocomplete="username" required minlength="3">
+      </label>
+      <label><span data-i18n="index.password">Şifre</span>
+        <input id="regPass" type="password" autocomplete="new-password" required minlength="6">
+      </label>
+      <label><span data-i18n="index.password2">Şifre (tekrar)</span>
+        <input id="regPass2" type="password" autocomplete="new-password" required minlength="6">
+      </label>
+      <button type="submit" class="primary" data-i18n="index.registerBtn">Grubu oluştur</button>
+      <p class="hint" data-i18n="index.registerHint">Bu kullanıcı adı ve şifreyle grubun tüm oyuncuları giriş yapabilir.</p>
+    </form>
+
+    <p class="err" id="err" hidden></p>
+  </section>
+
+  <p class="hint"><a href="/">← tanıtım sayfası</a> ·
+    <a href="/studio.html" data-i18n="index.studio">Video dosyasından analiz</a> ·
+    <span data-i18n="index.studioNote">geliştirici aracı</span></p>
+</div>
+<script src="/i18n.js"></script>
+<script src="/login.js"></script>
+</body>
+</html>

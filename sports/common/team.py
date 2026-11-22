@@ -107,6 +107,17 @@ class TeamClassifier:
         if len(crops) == 0:
             return np.array([])
 
-        data = self.extract_features(crops)
-        projections = self.reducer.transform(data)
+        return self.predict_from_features(self.extract_features(crops))
+
+    def predict_from_features(self, features: np.ndarray) -> np.ndarray:
+        """
+        Predict cluster labels from already extracted feature vectors.
+
+        Args:
+            features (np.ndarray): Feature matrix from ``extract_features``.
+
+        Returns:
+            np.ndarray: Predicted cluster labels.
+        """
+        projections = self.reducer.transform(features)
         return self.cluster_model.predict(projections)

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BakIAppi — maç</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>BakI<span>Appi</span></h1>
+    <span class="tag" id="shareGroup"></span>
+    <select class="lang" data-lang-select aria-label="Dil"></select>
+  </header>
+
+  <section class="panel">
+    <div class="livehead">
+      <b id="shareTitle"></b>
+      <span class="pill" id="shareStatus" hidden></span>
+      <span class="muted" id="shareMeta"></span>
+    </div>
+    <div class="cards" id="shareCards"></div>
+    <p class="muted" id="shareScorers" hidden></p>
+    <p class="err" id="shareErr" hidden></p>
+    <div class="tablewrap" id="shareTable" hidden>
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="col.player">Oyuncu</th>
+            <th data-i18n="col.team">Takım</th>
+            <th data-i18n="col.distance">Mesafe</th>
+            <th data-i18n="col.topSpeed">Tepe hız</th>
+            <th data-i18n="col.avgSpeed">Ortalama hız</th>
+            <th data-i18n="col.sprints">Sprint</th>
+          </tr>
+        </thead>
+        <tbody id="shareRows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="shareHeatPanel" hidden>
+    <h2 data-i18n="heat.title">Isı haritası</h2>
+    <div class="heatwrap"><img id="shareHeat" alt=""></div>
+  </section>
+
+  <section class="panel" id="shareTrendPanel" hidden>
+    <h2 data-i18n="roster.trend">Maçlar arası gelişim</h2>
+    <p class="hint" data-i18n="share.trendHint">Bu oyuncuların son maçlardaki mesafesi.</p>
+    <div class="trendblock">
+      <svg id="shareTrend" viewBox="0 0 640 200" role="img" aria-label="trend"></svg>
+      <div class="trendlegend" id="shareTrendLegend"></div>
+    </div>
+  </section>
+
+  <p class="hint">BakIAppi — halısaha canlı analiz</p>
+</div>
+<script src="/i18n.js"></script>
+<script src="/trend.js"></script>
+<script src="/share.js"></script>
+</body>
+</html>

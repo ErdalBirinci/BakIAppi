@@ -153,3 +153,9 @@ Desktop.ini
 *~
 .directory
 .Trash-*
+# local analysis app
+.venv/
+logs/
+app/data/
+preview/
+examples/soccer/data/

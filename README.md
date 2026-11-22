@@ -49,3 +49,11 @@ https://github.com/roboflow/sports/assets/26109316/7ad414dd-cc4e-476d-9af3-02dfd
 ## 🏆 contribution
 
 We love your input! [Let us know](https://github.com/roboflow/sports/issues) what else we should build!
+
+## 🧪 tests
+
+```bash
+.venv/Scripts/python.exe -m unittest discover -s tests -t . -v
+```
+
+Covers remap (swap/merge), card generation racing with match deletion, identity-repair rules, and the live/video pipeline wiring of identity repair with a fake classifier; uses a temporary data root, so `app/data` is untouched.

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BakIAppi — panel</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>BakI<span>Appi</span></h1>
+    <span class="tag" id="groupTag">…</span>
+    <span class="tag sporttag" id="sportTag">…</span>
+    <button class="ghost" id="sportChange" data-i18n="sport.change">Branşı değiştir</button>
+    <select class="lang" data-lang-select aria-label="Dil"></select>
+    <button class="ghost" id="logout" data-i18n="common.logout">Çıkış</button>
+  </header>
+
+  <section class="panel">
+    <h2 data-i18n="app.liveTitle">Canlı maç</h2>
+    <form id="startForm" class="row">
+      <input id="sourceUrl" class="grow" data-i18n-placeholder="app.sourcePlaceholder"
+             placeholder="YouTube canlı yayın linki (https://youtube.com/watch?v=...)" required>
+      <input id="matchTitle" data-i18n-placeholder="app.titlePlaceholder" placeholder="Maç adı (opsiyonel)">
+      <button type="submit" class="primary" id="startBtn" data-i18n="app.startBtn">Canlı analizi başlat</button>
+    </form>
+    <p class="hint" data-i18n="app.hint">Yayın linki yapıştırıldığında sistem akışa bağlanır.</p>
+    <p class="err" id="startErr" hidden></p>
+  </section>
+
+  <section class="panel" id="livePanel" hidden>
+    <h2 data-i18n="app.liveStatus">Canlı durum</h2>
+    <div class="livehead">
+      <span class="dot" id="liveDot"></span>
+      <b id="liveTitle"></b>
+      <span class="muted" id="liveStage"></span>
+      <span class="muted" id="liveClock"></span>
+      <button class="ghost" id="pauseBtn" data-i18n="control.pause">Duraklat</button>
+      <button class="ghost" id="halfBtn" data-i18n="control.half">2. yarı</button>
+      <button class="ghost" id="calibBtn" data-i18n="calib.open" hidden>Kalibrasyon</button>
+      <button class="ghost danger" id="stopBtn" data-i18n="app.stopBtn">Bitir ve analizi yayınla</button>
+    </div>
+    <div class="cards" id="liveCards"></div>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="col.player">Oyuncu</th>
+            <th data-i18n="col.team">Takım</th>
+            <th data-i18n="col.distance">Mesafe</th>
+            <th data-i18n="col.topSpeed">Tepe hız</th>
+            <th data-i18n="col.avgSpeed">Ortalama hız</th>
+            <th data-i18n="col.sprints">Sprint</th>
+            <th data-i18n="col.samples">Örnek</th>
+          </tr>
+        </thead>
+        <tbody id="liveRows"></tbody>
+      </table>
+    </div>
+    <div class="heatblock" id="liveHeat"></div>
+    <div class="eventblock" id="liveEvents"></div>
+  </section>
+
+  <section class="panel">
+    <h2 data-i18n="app.matches">Maçlar ve analizler</h2>
+    <div id="matchList" class="matchlist"><span class="muted" data-i18n="common.loading">yükleniyor…</span></div>
+  </section>
+
+  <section class="panel" id="rosterPanel" hidden>
+    <h2 data-i18n="roster.title">Kadro ve sezon</h2>
+    <p class="hint" data-i18n="roster.hint">İsim atanan oyuncuların maçlar arası toplamları.</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="col.player">Oyuncu</th>
+            <th data-i18n="col.matches">Maç</th>
+            <th data-i18n="col.distance">Mesafe</th>
+            <th data-i18n="col.topSpeed">Tepe hız</th>
+            <th data-i18n="col.sprints">Sprint</th>
+          </tr>
+        </thead>
+        <tbody id="rosterRows"></tbody>
+      </table>
+    </div>
+    <div class="trendblock" id="trendPanel" hidden>
+      <div class="sharehead-row">
+        <h3 data-i18n="roster.trend">Maçlar arası gelişim</h3>
+        <select id="trendMetric" aria-label="trend metric">
+          <option value="distance_m" data-i18n="trend.distance">Mesafe (m)</option>
+          <option value="top_speed_kmh" data-i18n="trend.topSpeed">Tepe hız (km/s)</option>
+          <option value="sprints" data-i18n="trend.sprints">Sprint</option>
+        </select>
+      </div>
+      <svg id="trendChart" viewBox="0 0 640 200" role="img" aria-label="trend"></svg>
+      <div class="trendlegend" id="trendLegend"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="detailPanel" hidden>
+    <h2 data-i18n="app.analysis">Analiz</h2>
+    <div class="livehead">
+      <b id="detailTitle"></b>
+      <span class="muted" id="detailMeta"></span>
+      <a class="ghost" id="download" href="#" data-i18n="app.downloadAnalysis">Analiz dosyasını indir</a>
+      <a class="ghost" id="reportLink" href="#" data-i18n="report.download">Takım raporu</a>
+      <a class="ghost" id="csvLink" href="#" data-i18n="export.csv">CSV indir</a>
+      <a class="ghost" id="videoLink" href="#" data-i18n="video.download" hidden>Maç videosu</a>
+      <button class="ghost" id="shareBtn" data-i18n="share.create">Bağlantı oluştur</button>
+      <button class="ghost" id="detailCalibBtn" data-i18n="calib.open" hidden>Kalibrasyon</button>
+      <button class="ghost" id="reconnectBtn" data-i18n="match.reconnect" hidden>Yeniden bağlan</button>
+      <button class="ghost danger" id="deleteBtn" data-i18n="match.delete">Maçı sil</button>
+    </div>
+    <p class="hint" id="shareLinkRow" hidden>
+      <span data-i18n="share.hint">Herkese açık, salt okunur bağlantı:</span>
+      <a id="shareLink" href="#" target="_blank" rel="noopener"></a>
+    </p>
+    <div class="row cliprow" id="clipRow" hidden>
+      <span data-i18n="video.clip">Klip</span>
+      <input type="number" id="clipStart" min="0" step="1" value="0" aria-label="start">
+      <span data-i18n="video.from">sn'den</span>
+      <input type="number" id="clipLength" min="1" max="180" step="1" value="20" aria-label="duration">
+      <span data-i18n="video.seconds">sn</span>
+      <button class="ghost" type="button" id="clipBtn" data-i18n="video.open">Klibi aç</button>
+    </div>
+    <div class="videoblock" id="videoBlock" hidden>
+      <video id="videoPlayer" controls playsinline preload="metadata"></video>
+    </div>
+    <div class="cards" id="detailCards"></div>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="col.player">Oyuncu</th>
+            <th data-i18n="col.team">Takım</th>
+            <th data-i18n="col.distance">Mesafe</th>
+            <th data-i18n="col.topSpeed">Tepe hız</th>
+            <th data-i18n="col.avgSpeed">Ortalama hız</th>
+            <th data-i18n="col.sprints">Sprint</th>
+          </tr>
+        </thead>
+        <tbody id="detailRows"></tbody>
+      </table>
+    </div>
+
+    <div class="heatblock" id="detailHeat"></div>
+
+    <div class="eventblock" id="detailEvents"></div>
+
+    <div class="reportblock">
+      <div class="sharehead-row">
+        <h3 data-i18n="report.text">Maç raporu</h3>
+        <a class="ghost" id="reportTxt" href="#" download data-i18n="report.downloadTxt">Raporu indir</a>
+      </div>
+      <pre class="reporttext" id="detailReport"></pre>
+    </div>
+
+    <div class="remap">
+      <div class="sharehead-row">
+        <h3 data-i18n="remap.title">Oyuncu kimliği düzelt</h3>
+      </div>
+      <p class="hint" data-i18n="remap.hint">Numaralar karıştıysa iki kaydı takas et ya da aynı oyuncuda birleştir.</p>
+      <div class="row">
+        <select id="remapA" aria-label="remap"></select>
+        <select id="remapMode">
+          <option value="swap" data-i18n="remap.swap">Takas et</option>
+          <option value="merge" data-i18n="remap.merge">Birleştir</option>
+        </select>
+        <select id="remapB" aria-label="remap"></select>
+        <button class="ghost" id="remapBtn" data-i18n="remap.apply">Uygula</button>
+      </div>
+    </div>
+
+    <div class="names">
+      <div class="sharehead-row">
+        <h3 data-i18n="names.title">Oyuncu isimleri</h3>
+        <button type="button" class="ghost" id="saveNames" data-i18n="names.save">İsimleri kaydet</button>
+      </div>
+      <p class="hint" data-i18n="names.hint">Maç sonunda isimleri yaz; kartlarda ve paylaşım açıklamasında bu isimler görünür.</p>
+      <div class="namegrid" id="nameGrid"></div>
+    </div>
+
+    <div class="sharehead">
+      <div class="sharehead-row">
+        <h3 data-i18n="cards.title">Kartları paylaş</h3>
+        <select class="lang" data-card-lang aria-label="Kart dili"></select>
+      </div>
+      <p class="hint" data-i18n="cards.hint">Her oyuncu için 1080×1350 kart üretilir.</p>
+    </div>
+    <div class="sharegrid" id="shareGrid"></div>
+  </section>
+
+
+<div class="modal" id="sportGate" hidden role="dialog" aria-modal="true" aria-labelledby="sportGateTitle">
+  <div class="modalcard">
+    <h2 id="sportGateTitle" data-i18n="sport.title">Hangi branş?</h2>
+    <p class="hint" data-i18n="sport.lead"></p>
+    <div class="sportgrid" id="sportChoices"></div>
+    <div class="row modalfoot">
+      <button type="button" class="primary" id="sportContinue" disabled data-i18n="sport.choose"></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="calibModal" hidden role="dialog" aria-modal="true" aria-labelledby="calibTitle">
+  <div class="modalcard wide">
+    <h2 id="calibTitle" data-i18n="calib.title">Saha kalibrasyonu</h2>
+    <p class="hint" data-i18n="calib.hint"></p>
+    <p class="hint" data-i18n="calib.order"></p>
+    <div class="calibstage" id="calibStage">
+      <canvas id="calibCanvas" width="1280" height="720"></canvas>
+      <p class="muted" id="calibLoading">…</p>
+    </div>
+    <div class="row calibrow">
+      <label class="muted"><span data-i18n="calib.extent"></span>
+        <select id="calibExtent">
+          <option value="full" data-i18n="calib.full">Tam saha</option>
+          <option value="half" data-i18n="calib.half">Yarım saha</option>
+        </select>
+      </label>
+      <span class="muted" id="calibPoints"></span>
+      <button type="button" class="ghost" id="calibReset" data-i18n="calib.reset">Sıfırla</button>
+      <button type="button" class="primary" id="calibSave" data-i18n="calib.save" disabled>Kalibrasyonu kaydet</button>
+      <button type="button" class="ghost" id="calibClose" data-i18n="calib.close">Kapat</button>
+    </div>
+  </div>
+</div>
+
+  <p class="err" id="err" hidden></p>
+</div>
+<datalist id="rosterNames"></datalist>
+<div class="toast" id="toast" hidden></div>
+<script src="/i18n.js"></script>
+<script src="/trend.js"></script>
+<script src="/dashboard.js"></script>
+</body>
+</html>
